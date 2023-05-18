@@ -1,0 +1,18 @@
+version: '1.test'
+
+volumes:  # set the volume with name postgres_volume
+  postgres_volume:
+
+services:
+  postgres:
+    image: postgres:15.3-alpine  # here is no any reason to use debian version
+    container_name: postgres_server_test
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data  # default location according to https://hub.docker.com/_/postgres
+    restart: always  # set 'no' if you don't want to restart container every time
+    ports:
+      - "5430:5432"  # run app on local port 5430, postgres in container on port 5432
+    environment:  # import from .env
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
