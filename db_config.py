@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from models import Base
-from sqlalchemy_utils import create_database
+
 
 load_dotenv()
 login = os.getenv('DB_USER')

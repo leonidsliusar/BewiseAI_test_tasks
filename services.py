@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime
 import aiohttp
 from sqlalchemy import select
@@ -24,12 +25,13 @@ async def get_answer(questions_num: int) -> list[dict]:  # make request to third
 async def exist_check(question_collection: set[int]) -> set[int]:
     async with async_session() as session:
         query = select(QuizQuestion.id).where(QuizQuestion.id.in_(question_collection))
-        repeatable_question = await session.execute(query)
-        repeats = question_collection.intersection(repeatable_question)
-    return repeats
+        repeatable_question = await session.scalars(query)
+        repeatable_set = question_collection.intersection({id for id in repeatable_question})
+    return repeatable_set
 
 
-async def create_question(questions_collection: list[dict]):  # make DB insertion and return previous saved entries
+# make DB insertion and return previous saved entries
+async def create_question(questions_collection: list[dict]) -> list[dict]:
     previous_question = cache.get_cache
     objects_for_insert = []
     for question in questions_collection:
