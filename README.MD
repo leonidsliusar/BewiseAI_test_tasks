@@ -68,7 +68,7 @@
 ![img_9.png](README/img_9.png)
 
     You could see the volume of container which store data in localmachine
-    That's why after restarted container keep save data
+    That's why after restarted container the data keep save
     $ docker volume ls
 ![img_10.png](README/img_10.png)
 
