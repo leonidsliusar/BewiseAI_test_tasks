@@ -1,14 +1,13 @@
 import asyncio
 from datetime import datetime
-from main import app
+from task1.main import app
 import pytest
 import pytest_asyncio
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 import subprocess
 from fastapi.testclient import TestClient
-import cache
-import services
-from models import Base, QuizQuestion
+from task1 import cache, services
+from task1.models import Base, QuizQuestion
 
 
 @pytest_asyncio.fixture

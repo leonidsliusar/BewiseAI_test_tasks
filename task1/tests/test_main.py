@@ -1,6 +1,6 @@
 import pytest
-import main
-from tests.conftest import mock_get_answer, mock_create_question, client
+from task1 import main
+from task1.tests.conftest import mock_get_answer, mock_create_question, client
 
 
 @pytest.mark.parametrize('quantity_question', [(1), ])

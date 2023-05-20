@@ -8,8 +8,16 @@
     DB_USER=<set any username, for example postgres>
     DB_PASSWORD=<set any password>
     DB_HOST=<set localhost>
-    DB_PORT=5430
+    DB_PORT=5430 
+    DB_PORT2=5431 
     DB_NAME=<set any database name>
+    
+    # if ports 5430 and 5431 already in use you could change it to any free port in .env and in docker-compose.yml
+    # but if you set the same port for both apps it wouldn't work properly
+    services:
+        postgres:
+                ports:
+                  - "{SET_PORT}:5432"
 # 4. Create and run virtual environment (you could find full instruction in docs https://docs.python.org/3/library/venv.html):
     $ python -m venv <env name> | $ python3 -m venv <env name>
     $ source <env name>/bin/activate
@@ -18,9 +26,12 @@
     $ deactivate
 # 5. Run command in terminal (be sure pip already install on your machine):
     $ pip install -r requirements.txt 
-# 6. Run command in terminal (be sure docker already installed on your machine):
+
+# 6. Change directory to desired task 1 or 2
+    $ cd task1 | task2
+# 7. Run command in terminal (be sure docker already installed on your machine):
     $ docker compose up -d
-# 7. Run command in terminal:
+# 8. Run command in terminal:
     $ uvicorn main:app
 
 # To see how it works you could 
@@ -49,7 +60,7 @@
     Also you could check entries in database:
     Find the id and name of running container
     $ docker ps
-    It shall be look like:
+    It shall be looks like:
 ![img_6.png](README/img_6.png)
     
     The next command provides you working with postgres inside container

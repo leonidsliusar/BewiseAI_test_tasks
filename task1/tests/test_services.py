@@ -1,5 +1,5 @@
 import pytest
-from services import exist_check, create_question, get_answer
+from task1.services import exist_check, create_question
 
 
 @pytest.mark.asyncio

@@ -1,8 +1,8 @@
 from datetime import datetime
 
 import pytest
-from cache import cache
-from models import QuizQuestion
+from task1.cache import cache
+from task1.models import QuizQuestion
 
 
 @pytest.mark.parametrize('collection', [([{1: 1}, {2: 2}, {3: 3}])])
