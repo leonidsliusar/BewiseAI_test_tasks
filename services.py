@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Optional
 
 import aiohttp
-from sqlalchemy import select
+from sqlalchemy import select, text
 from sqlalchemy.exc import IntegrityError
 
 from db_config import async_session
@@ -54,7 +54,13 @@ async def create_question(questions_collection: list[dict]) -> list[dict]:  # ma
         )
         objects_for_insert.append(obj)
     async with async_session() as session:
-        session.add_all(objects_for_insert)
-        await session.commit()
+        async with session.begin():  # run transaction
+            await session.execute(text("LOCK TABLE quiz_question IN ROW EXCLUSIVE MODE;"))  # set lock on table including insertion
+            try:
+                session.add_all(objects_for_insert)
+                await session.commit()
+            except IntegrityError:  # if another transaction already insert same data
+                await session.rollback()
+                await create_question(unique_question)
     cache.set_cache((objects_for_insert[-1]).to_json())
     return previous_question

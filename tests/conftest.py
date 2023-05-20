@@ -1,14 +1,13 @@
 import asyncio
 from datetime import datetime
-
+from main import app
 import pytest
 import pytest_asyncio
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 import subprocess
-
+from fastapi.testclient import TestClient
 import cache
 import services
-from db_config import async_session
 from models import Base, QuizQuestion
 
 
@@ -43,3 +42,14 @@ def bulk_insert_in_db():
             await conn.commit()
 
     return wrapper
+
+
+async def mock_get_answer(quantity_question):
+    return [{'quantity_question': quantity_question}]
+
+
+async def mock_create_question(response_third_api):
+    return response_third_api
+
+
+client = TestClient(app)

@@ -5,8 +5,8 @@ from services import exist_check, create_question, get_answer
 @pytest.mark.asyncio
 @pytest.mark.parametrize('question_collection, expected_result',
                          [
-                             ({1, 2, 3}, {1, 2}),
-                             ({50, 10, 21}, {50, 10, 21})
+                             ([{'id': 1}, {'id': 2}, {'id': 3}], {1, 2}),
+                             ([{'id': 50}, {'id': 10}, {'id': 21}], {50, 10, 21})
                          ]
                          )
 async def test_exist_check(setup_and_teardown_db, bulk_insert_in_db, question_collection, expected_result):
@@ -51,10 +51,3 @@ async def test_create_repeatable_question(setup_and_teardown_db, questions_colle
     assert res1 == expected_result_1
     res2 = await create_question(questions_collection_2)
     assert res2 == expected_result_2
-
-
-# @pytest.mark.asyncio
-# @pytest.mark.parametrize('questions_num'[(100)])
-# async def test_get_answer(questions_num):
-#     expected_result = [{x: 'test'} for x in range(questions_num)]
-#     assert get_answer(questions_num) == expected_result
