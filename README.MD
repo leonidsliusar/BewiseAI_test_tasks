@@ -4,12 +4,11 @@
     $ cd ~/.../<ProjectName>
 # 2. Run command in terminal: 
     $ git clone https://github.com/leonidsliusar/BewiseAI_test_tasks.git
-# 3. Create .env file with next environment variable:
+# 3. Create .env files for each app (task1, task2) with next environment variable:
     DB_USER=<set any username, for example postgres>
     DB_PASSWORD=<set any password>
     DB_HOST=<set localhost>
-    DB_PORT=5430 
-    DB_PORT2=5431 
+    DB_PORT=5430 | DB_PORT=5431  # for task1 | task2
     DB_NAME=<set any database name>
     
     # if ports 5430 and 5431 already in use you could change it to any free port in .env and in docker-compose.yml
@@ -32,6 +31,8 @@
 # 7. Run command in terminal (be sure docker already installed on your machine):
     $ docker compose up -d
 # 8. Run command in terminal:
+    $ alembic upgrade head
+# 9. Run command in terminal:
     $ uvicorn main:app
 
 # To see how it works you could 

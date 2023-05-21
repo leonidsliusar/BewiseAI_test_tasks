@@ -1,5 +1,5 @@
 import pytest
-from task1.services import exist_check, create_question
+from services import exist_check, create_question
 
 
 @pytest.mark.asyncio
@@ -10,9 +10,10 @@ from task1.services import exist_check, create_question
                          ]
                          )
 async def test_exist_check(setup_and_teardown_db, bulk_insert_in_db, question_collection, expected_result):
-    async_session = setup_and_teardown_db
-    await bulk_insert_in_db(async_session, expected_result)
-    assert await exist_check(question_collection) == expected_result
+    mock_async_session = setup_and_teardown_db
+    async with mock_async_session() as session:
+        await bulk_insert_in_db(session, expected_result)
+        assert await exist_check(question_collection, session) == expected_result
 
 
 @pytest.mark.asyncio

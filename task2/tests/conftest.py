@@ -7,10 +7,10 @@ import pytest_asyncio
 from fastapi.testclient import TestClient
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
-import cache
+
 import services
 from main import app
-from models import Base, QuizQuestion
+from models import Base
 
 
 @pytest_asyncio.fixture
@@ -26,7 +26,6 @@ async def setup_and_teardown_db(monkeypatch):
     yield mock_session
     stop_command = 'docker rm test -f -v'  # force remove docker container
     subprocess.run(['bash', '-c', stop_command])
-    cache.cache.reset_cache
 
 
 @pytest.fixture
