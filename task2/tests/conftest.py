@@ -1,11 +1,16 @@
 import asyncio
+import io
 import subprocess
+
+import pytest
 import pytest_asyncio
 from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from starlette.testclient import TestClient
+
 import services
 from models import Base, User, Record
-
+from main2 import app
 
 @pytest_asyncio.fixture
 async def setup_and_teardown_db(monkeypatch):
@@ -41,4 +46,15 @@ def insert_in_db():
     return wrapper
 
 
-# client = TestClient(app)
+client = TestClient(app)
+
+
+async def stub_get_item(record_id, user_id):
+    mock_buffer = io.BytesIO()
+    mock_buffer.write(b'test')
+    mock_buffer.seek(0)
+    return mock_buffer, 'test.mp3'
+
+
+async def mock_add_user(user_name):
+    return {'user_name': user_name}

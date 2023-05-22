@@ -20,6 +20,6 @@ async def create_user(user_name: str) -> dict:
 
 
 @app.post('/record')
-async def add_record(request: Request, user_id: int, token: str, file: UploadFile = File(...)):
+async def add_record(request: Request, user_id: int, token: str, file: UploadFile = File(...)) -> Response:
     response = await add_item(str(request.url), user_id, uuid.UUID(token), file)
     return Response(response, media_type='text/html')

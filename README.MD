@@ -33,7 +33,7 @@
 # 8. Run command in terminal:
     $ alembic upgrade head
 # 9. Run command in terminal:
-    $ uvicorn main:app
+    $ uvicorn main:app | $ uvicorn main2:app
 
 # To see how it works you could 
     The command 7. uvicorn main:app run the uvicorn local server.
@@ -57,6 +57,27 @@
     
     Next request will send response with previous added question
 ![img_5.png](README/img_5.png)
+    
+    In second app is three API's
+![img.png](README/img_12.png)
+
+    At first you should create user
+    API response to you with JSON with user id and UUID
+    {
+    "id": 4,
+    "UUID": "9b74127e-6e2b-41aa-9f8b-874d261f8444"
+    }
+![img_1.png](README/img_13.png)
+
+    The next API receives user id, user UUID and wav file
+    And send link to download file in mp3
+    The link redirect you to next API with record id and user id in endpoint query string
+![img_2.png](README/img_14.png)
+    
+    The last API send file to you
+    You could download it in FastAPI interactive API or just paste it in browser adress bar  
+![img_3.png](README/img_16.png)
+![img_4.png](README/img_15.png)
 
     Also you could check entries in database:
     Find the id and name of running container
