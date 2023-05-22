@@ -1,8 +1,7 @@
-from aiohttp import test_utils
 import pytest
 from asyncpg.pgproto.pgproto import UUID
 from fastapi import UploadFile, HTTPException
-from services import add_user, add_item, user_validation
+from services import add_user, add_item, user_validation, get_item
 
 
 @pytest.mark.asyncio
@@ -59,6 +58,15 @@ async def test_add_item(setup_and_teardown_db, url='localhost:8000/record?', fil
     user_data = await add_user('test')
     user_id, token = user_data['id'], user_data['UUID']
     with open(file_path, 'rb') as file:
-        mock_file = UploadFile(file, filename=file_path.rsplit('/', 0), headers={"content-type": "audio/wav"})
+        mock_file = UploadFile(file, filename=file_path.rsplit('/', 0)[0], headers={"content-type": "audio/wav"})
         result = await add_item(url, user_id, token, mock_file)
-    assert result == url + 'id=1&user_id=1'
+    assert result == url + 'record_id=1&user_id=1'
+
+
+@pytest.mark.asyncio
+async def test_get_item(setup_and_teardown_db, insert_in_db, file_content=b'test', file_name='test.txt'):
+    session = setup_and_teardown_db
+    user_id, record_id = await insert_in_db(session, file_content, file_name)
+    file, filename = await get_item(record_id, user_id)
+    assert file.read() == file_content
+    assert filename == filename

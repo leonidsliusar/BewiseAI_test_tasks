@@ -1,16 +1,10 @@
 import asyncio
 import subprocess
-from datetime import datetime
-
-import pytest
 import pytest_asyncio
-from fastapi.testclient import TestClient
+from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
-
-
 import services
-from main import app
-from models import Base
+from models import Base, User, Record
 
 
 @pytest_asyncio.fixture
@@ -28,27 +22,23 @@ async def setup_and_teardown_db(monkeypatch):
     subprocess.run(['bash', '-c', stop_command])
 
 
-@pytest.fixture
-def bulk_insert_in_db():
-    async def wrapper(session, expected_result):
-        mock_obj = []
-        for id in expected_result:
-            mock_obj.append(
-                QuizQuestion(id=id,
-                             question='test',
-                             answer='test',
-                             created_at=datetime.strptime(('2050-01-01T0:00:00.104'), "%Y-%m-%dT%H:%M:%S.%f")))
-        session.add_all(mock_obj)
-
+@pytest_asyncio.fixture
+def insert_in_db():
+    async def wrapper(async_session, file_content, file_name):
+        async with async_session() as session:
+            async with session.begin():
+                user_data_raw = await session.execute(insert(User).values(name='Test').returning(User.id, User.UUID))
+                user_data = user_data_raw.mappings().fetchone()
+                user_id, token = user_data['id'], user_data['UUID']
+                record_id_raw = await session.execute(insert(Record).values(
+                    user_id=user_id,
+                    content=file_content,
+                    record_name=file_name
+                ).returning(Record.record_id))
+                record_id = record_id_raw.scalar()
+                await session.commit()
+        return user_id, record_id
     return wrapper
 
 
-async def mock_get_answer(quantity_question):
-    return [{'quantity_question': quantity_question}]
-
-
-async def mock_create_question(response_third_api):
-    return response_third_api
-
-
-client = TestClient(app)
+# client = TestClient(app)
