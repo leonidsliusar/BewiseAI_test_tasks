@@ -1,7 +1,10 @@
 import io
 
+from fastapi import UploadFile
+
 import main2
-from tests.conftest import client, stub_get_item, mock_add_user
+import services
+from tests.conftest import client, stub_get_item, mock_add_user, mock_file, stub_add_item
 
 
 def test_get_record(monkeypatch, record_id=1, user_id=1):
@@ -18,6 +21,9 @@ def test_create_user(monkeypatch, user_name='test'):
     assert response.status_code == 200
 
 
-def test_add_record(monkeypatch, request, user_id, token, file):
-    pass
-
+def test_add_record(monkeypatch, user_id=1, token='1d6bb4e0-3514-4827-9616-c6e153173671', file=mock_file()):
+    monkeypatch.setattr(main2, 'add_item', stub_add_item)
+    mock_url = f'/record?user_id={user_id}&token={token}'
+    response = client.post(mock_url, files={'file': file})
+    assert response.status_code == 200
+    assert response.text == str(client.base_url) + mock_url

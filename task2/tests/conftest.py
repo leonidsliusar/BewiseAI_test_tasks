@@ -58,3 +58,15 @@ async def stub_get_item(record_id, user_id):
 
 async def mock_add_user(user_name):
     return {'user_name': user_name}
+
+
+async def stub_add_item(url, user_id, token, file):
+    mock_response = url
+    return mock_response
+
+
+def mock_file():
+    mock_buffer = io.BytesIO()
+    mock_buffer.write(b'test')
+    mock_buffer.seek(0)
+    return mock_buffer.getvalue()
